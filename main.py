@@ -8,8 +8,6 @@ def user_error(func):
             return "Not enough params. Use help."
         except KeyError:
             return "Unknown name. Try another or use help."
-        except ValueError:
-            return "A lot of data. Input please name and phone number"
     return inner
 
 def hello():
@@ -18,7 +16,7 @@ def hello():
 @user_error
 def add_record(*args):
     if len(args) > 2:
-        raise ValueError("A lot of data. Input please name and phone number")
+        raise ValueError("Ambiguous input. Please provide only a name and a phone number")
     name = args[0]
     phone_number = args[1]
     records[name] = phone_number
@@ -48,7 +46,7 @@ def parser(text: str):
     for func, kw in COMMANDS.items():
         if text.startswith(kw):
             return func, text[len(kw):].strip().split()
-    return unknown
+    return unknown, []
 
 def main():
     while True:
