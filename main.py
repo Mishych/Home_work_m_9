@@ -1,3 +1,5 @@
+import re
+
 records = {}
 
 def user_error(func):
@@ -19,6 +21,17 @@ def add_record(*args):
         raise ValueError("Ambiguous input. Please provide only a name and a phone number")
     name = args[0]
     phone_number = args[1]
+    
+    if name in records and records[name] == phone_number:
+        return "The record already exists"
+    
+    for key in records.keys():
+        pattern = r'^{}(\(\d+\))?$'.format(re.escape(name))
+        filtered_keys = [key for key in records if re.match(pattern, key)]     
+        if key == name: 
+            records[f"{name}({len(filtered_keys)})"] = phone_number
+            return f"Add record {name = }, {phone_number = }"
+    
     records[name] = phone_number
     return f"Add record {name = }, {phone_number = }"
 
